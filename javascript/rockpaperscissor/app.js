@@ -51,8 +51,8 @@ function playRound(playerSelection, computerSelection) {
 function game() {
     for (let i = 0; i < 5; i++) {
         // your code here!
-        const playerSelection = prompt("Type 'Rock', 'Paper', or 'Scissor'");
-        const computerSelection = getComputerChoice();
+        let playerSelection = prompt("Type 'Rock', 'Paper', or 'Scissor'");
+        let computerSelection = getComputerChoice();
         alert(playRound(playerSelection, computerSelection));
      }
 
