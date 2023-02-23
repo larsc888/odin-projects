@@ -3,17 +3,14 @@ function getComputerChoice() {
     switch (random) {
         case 1:
             return "Rock";
-            break;
         case 2:
             return "Paper";
-            break;
         case 3:
-            return "Scissor";
-            break;                        
+            return "Scissor";               
     }
 }
 
-function cleanPlayerSelection(str) {
+function cleanString(str) {
     let result = "";
     for (let i = 0; i < str.length; i++) {
         if (i === 0) {
@@ -28,9 +25,9 @@ function cleanPlayerSelection(str) {
 
 function playRound(playerSelection, computerSelection) {
     // your code here!
-    playerSelection = cleanPlayerSelection(playerSelection);
+    playerSelection = cleanString(playerSelection);
 
-    // Make a result calcuation dictionary with rock, paper, scissor (will match player choice)
+    // Pre-determined results via a simple dictionary (fast and no conditionals needed)
     let results = {
         'Rock': {
             'Scissor': 'You Win! Rock beats Scissor',
@@ -48,7 +45,6 @@ function playRound(playerSelection, computerSelection) {
             'Scissor': 'You Tie! You both choose Scissor'
         }
     }
-    
     return results[playerSelection][computerSelection];
   }
 
