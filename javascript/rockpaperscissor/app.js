@@ -40,6 +40,18 @@ function tallyScore(result) {
     }
 }
 
+function determineWinner() {
+    if (PLAYERSCORE > CPUSCORE) {
+        return "The winner is Player."
+    } 
+    else if (PLAYERSCORE < CPUSCORE) {
+        return "The winner is Computer."
+    }
+    else {
+        return "This game is tied."
+    }
+}
+
 function playRound(playerSelection, computerSelection) {
     playerSelection = cleanString(playerSelection);
 
@@ -74,7 +86,8 @@ function game() {
         let computerSelection = getComputerChoice();
         alert(playRound(playerSelection, computerSelection));
      }
-     alert("Player score is " + PLAYERSCORE + " and Computer score is " + CPUSCORE + ".  \nPlease reload browser to try again.");
+     let winner = determineWinner();
+     alert("Player score is " + PLAYERSCORE + " and Computer score is " + CPUSCORE + ".  \n" + winner + "\n" + "Please reload browser to try again.");
 }
 
 game();   
