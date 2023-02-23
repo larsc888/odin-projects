@@ -1,19 +1,14 @@
-const ROCK = "Rock";
-const PAPER = "Paper";
-const SCISSOR = "Scissor";
-
-
 function getComputerChoice() {
     let random = Math.floor(Math.random() * 3) + 1;
     switch (random) {
         case 1:
-            return ROCK;
+            return "Rock";
             break;
         case 2:
-            return PAPER;
+            return "Paper";
             break;
         case 3:
-            return SCISSOR;
+            return "Scissor";
             break;                        
     }
 }
@@ -68,8 +63,4 @@ function game() {
      alert("Please reload browser to try again");
 }
 
-game();
-
-
-
-   
+game();   
