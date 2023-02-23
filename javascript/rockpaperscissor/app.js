@@ -1,3 +1,11 @@
+const WIN = 1
+const TIE = 0
+const LOSE = -1
+
+// Keep Track of Player Score
+let PLAYERSCORE = 0;
+let CPUSCORE = 0;
+
 function getComputerChoice() {
     let random = Math.floor(Math.random() * 3) + 1;
     switch (random) {
@@ -23,29 +31,40 @@ function cleanString(str) {
     return result;
 }
 
+function tallyScore(result) {
+    if (result === WIN) {
+        PLAYERSCORE += 1;
+    }
+    if (result === LOSE) {
+        CPUSCORE += 1;
+    }
+}
+
 function playRound(playerSelection, computerSelection) {
-    // your code here!
     playerSelection = cleanString(playerSelection);
 
     // Pre-determined results via a simple dictionary (fast and no conditionals needed)
-    let results = {
+    let resultList = {
         'Rock': {
-            'Scissor': 'You Win! Rock beats Scissor',
-            'Paper': 'You Lose! Scissor beats Rock',
-            'Rock': 'You Tie! You both choose Rock'
+            'Scissor': ['You Win! Rock beats Scissor', WIN],
+            'Paper': ['You Lose! Scissor beats Rock', LOSE],
+            'Rock': ['You Tie! You both choose Rock', TIE]
         },
         'Paper': {
-            'Rock': 'You Win! Paper beats Rock',
-            'Scissor': 'You Lose! Scissor beats Paper',
-            'Paper': 'You Tie! You both choose Paper'
+            'Rock': ['You Win! Paper beats Rock', WIN],
+            'Scissor': ['You Lose! Scissor beats Paper', LOSE],
+            'Paper': ['You Tie! You both choose Paper', TIE]
         },
         'Scissor': {
-            'Paper': 'You Win! Scissor beats Paper',
-            'Rock': 'You Lose! Rock beats Scissor',
-            'Scissor': 'You Tie! You both choose Scissor'
+            'Paper': ['You Win! Scissor beats Paper', WIN],
+            'Rock': ['You Lose! Rock beats Scissor', LOSE],
+            'Scissor': ['You Tie! You both choose Scissor', TIE]
         }
     }
-    return results[playerSelection][computerSelection];
+    
+    let result = resultList[playerSelection][computerSelection];
+    tallyScore(result[1])
+    return result[0]
   }
 
 function game() {
@@ -55,8 +74,7 @@ function game() {
         let computerSelection = getComputerChoice();
         alert(playRound(playerSelection, computerSelection));
      }
-
-     alert("Please reload browser to try again");
+     alert("Player score is " + PLAYERSCORE + " and Computer score is " + CPUSCORE + ".  \nPlease reload browser to try again.");
 }
 
 game();   
