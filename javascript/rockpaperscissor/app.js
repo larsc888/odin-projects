@@ -59,18 +59,18 @@ function playRound(playerSelection, computerSelection) {
     let resultList = {
         'Rock': {
             'Scissor': ['You Win! Rock beats Scissor', WIN],
-            'Paper': ['You Lose! Scissor beats Rock', LOSE],
-            'Rock': ['You Tie! You both choose Rock', TIE]
+            'Paper': ['You Lose! Paper beats Rock', LOSE],
+            'Rock': ['Tied! You both choose Rock', TIE]
         },
         'Paper': {
             'Rock': ['You Win! Paper beats Rock', WIN],
             'Scissor': ['You Lose! Scissor beats Paper', LOSE],
-            'Paper': ['You Tie! You both choose Paper', TIE]
+            'Paper': ['Tied! You both choose Paper', TIE]
         },
         'Scissor': {
             'Paper': ['You Win! Scissor beats Paper', WIN],
             'Rock': ['You Lose! Rock beats Scissor', LOSE],
-            'Scissor': ['You Tie! You both choose Scissor', TIE]
+            'Scissor': ['Tied! You both choose Scissor', TIE]
         }
     }
     
@@ -79,15 +79,51 @@ function playRound(playerSelection, computerSelection) {
     return result[0]
   }
 
-function game() {
-    for (let i = 0; i < 5; i++) {
-        // your code here!
-        let playerSelection = prompt("Type 'Rock', 'Paper', or 'Scissor'");
-        let computerSelection = getComputerChoice();
-        alert(playRound(playerSelection, computerSelection));
-     }
-     let winner = determineWinner();
-     alert("Player score is " + PLAYERSCORE + " and Computer score is " + CPUSCORE + ".  \n" + winner + "\n" + "Please reload browser to try again.");
+function game(e) {
+    // Reset score if either computer or user has 5 points
+    if (PLAYERSCORE === 5 || CPUSCORE === 5) {
+        PLAYERSCORE = 0;
+        CPUSCORE = 0;
+    }
+
+    // Get Player Info
+    let playerSelection = this.name;
+    let computerSelection = getComputerChoice();
+
+    // Remove all existing active buttons and assign active button to clicked button
+    let playerButtons = document.querySelectorAll("button");
+    playerButtons.forEach(button => button.classList.remove("active"));
+    this.classList.add("active");
+
+    // Display Result in #result h1
+    let result = document.querySelector("#result h1");
+    let text = playRound(playerSelection, computerSelection);
+
+    // Change displayed text result if either player or computer won the game
+    if (PLAYERSCORE === 5) { text = "You won five rounds.  You are the winner."; }
+    if (CPUSCORE === 5) { text = "The computer won five rounds.  The computer is the winner."; }
+    result.textContent = text;    
+
+    // Update Player and Computer Score
+    let playerScore = document.querySelector("#playerScore");
+    let computerScore = document.querySelector("#computerScore");
+    playerScore.textContent = `Player Score: ${PLAYERSCORE}`;
+    computerScore.textContent = `Computer Score: ${CPUSCORE}`;
+
+    // Show What the Computer Did
+    let computerChoice = document.querySelector("#computerChoice");
+    if (computerSelection === "Rock") {
+        computerChoice.innerHTML = `<i class="fa-regular fa-hand-back-fist fa-7x"></i>`;
+    }
+    else if (computerSelection === "Paper") {
+        computerChoice.innerHTML = `<i class="fa-regular fa-hand fa-7x"></i>`;
+    }
+    else {
+        computerChoice.innerHTML = `<i class="fa-regular fa-hand-scissors fa-7x"></i>`;
+    }
 }
 
-game();   
+window.addEventListener("load", (event) => {
+    const playerButtons = document.querySelectorAll("button");
+    playerButtons.forEach(playerButton => playerButton.addEventListener("click", game));   
+});
