@@ -1,3 +1,4 @@
+// Debounce to make process less CPU intensive
 function debounce(func, wait = 20, immediate = true) {
     var timeout;
     return function() {
@@ -14,39 +15,44 @@ function debounce(func, wait = 20, immediate = true) {
 }
 
 // Start My App Logic Here
-let drag = false;
-const gridElementEmptyColor = "#FFF";
+const DEFAULT_SIZE = 16;
+const DEFAULT_COLOR = "#FFF";
+const RAINBOW_PALLETE = [
+    "rgb(255, 0, 0)", 
+    "rgb(255, 128, 0)", 
+    "rgb(255, 255, 0)", 
+    "rgb(0, 255, 0)", 
+    "rgb(0, 255, 255)", 
+    "rgb(0, 0, 255)", 
+    "rgb(128, 0, 255)" 
+];            
 
-function fillGridContainer(num=16) {
+let mouseDrag = false;
+function fillGridContainer(size=DEFAULT_SIZE) {
     const gridContainer = document.querySelector("#grid-container");
     // First Clear Gird Container
     gridContainer.innerHTML = "";
     // Now Fill Grid Container
-    let numOfGrid = num * num;
-    for (let i = 0; i < numOfGrid; i++) {
+    let sizeOfGrid = size * size;
+    for (let i = 0; i < sizeOfGrid; i++) {
         let gridElement = document.createElement("div");
         gridElement.className = "grid-element";
         gridContainer.append(gridElement);
-        gridElement.addEventListener("mousedown", () => drag = true);
-        gridElement.addEventListener("mouseup", () => drag = false);
+        gridElement.addEventListener("mousedown", () => mouseDrag = true);
+        gridElement.addEventListener("mouseup", () => mouseDrag = false);
         gridElement.addEventListener("mousemove", debounce(setGridElement));
     }
-    console.log(gridContainer.style);
-    gridContainer.style["grid-template-columns"] = `repeat(${num}, 1fr)`
+    // Set New Grid Style
+    gridContainer.style["grid-template-columns"] = `repeat(${size}, 1fr)`
 }
 
-function setActiveButton(e) {
-    const buttonList = document.querySelectorAll("#menu button.edit");
-    buttonList.forEach(button => button.classList.remove("active"));
-    this.classList.add("active");
-}
-
-function clearGrid() {
-    let gridElements = document.querySelectorAll(".grid-element");
-    gridElements.forEach(gridElement => {
-        console.log(gridElement.style.backgroundColor);
-        gridElement.style.backgroundColor = gridElementEmptyColor;
-    });
+function setGridElement(e) {
+    if (mouseDrag) {
+        // Detect Which Buttons Are Active
+        let active = document.querySelector("#menu button.active"); 
+        let color = getColor(active);
+        this.style.backgroundColor = color;
+    }
 }
 
 function getColor(active) {
@@ -55,29 +61,17 @@ function getColor(active) {
         case "colorMode":
             return colorPicker.value;
         case "rainboxMode":
-            const rainbowPallete = [
-                "rgb(255, 0, 0)", 
-                "rgb(255, 128, 0)", 
-                "rgb(255, 255, 0)", 
-                "rgb(0, 255, 0)", 
-                "rgb(0, 255, 255)", 
-                "rgb(0, 0, 255)", 
-                "rgb(128, 0, 255)" 
-            ];            
             let random = Math.floor(Math.random() * 7);
-            return rainbowPallete[random];
+            return RAINBOW_PALLETE[random];
         case "eraser":
-            return gridElementEmptyColor;
+            return DEFAULT_COLOR;
     }
 }
 
-function setGridElement(e) {
-    if (drag) {
-        // Detect Which Buttons Are Active
-        let active = document.querySelector("#menu button.active"); 
-        let color = getColor(active);
-        this.style.backgroundColor = color;
-    }
+function setActiveButton(e) {
+    const buttonList = document.querySelectorAll("#menu button.edit");
+    buttonList.forEach(button => button.classList.remove("active"));
+    this.classList.add("active");
 }
 
 function setSlider(e) {
@@ -87,10 +81,12 @@ function setSlider(e) {
     fillGridContainer(this.value);
 }
 
-window.addEventListener("load", (event) => {
-    // Fill grid container with 256 grids (16x16) (also sets the event lister for each grid)
-    fillGridContainer();
+function clearGrid() {
+    let gridElements = document.querySelectorAll(".grid-element");
+    gridElements.forEach(element => element.style.backgroundColor = DEFAULT_COLOR);
+}
 
+function setActiveMenu() {
     // Set default active button
     const activeButton = document.querySelector("#menu button");
     activeButton.classList.add("active");
@@ -99,11 +95,16 @@ window.addEventListener("load", (event) => {
     const buttonList = document.querySelectorAll("#menu button.edit");
     buttonList.forEach(button => button.addEventListener("click", setActiveButton));
 
+    // Set Slider
+    const slider = document.getElementById("size-slider");
+    slider.addEventListener("change", setSlider);    
+
     // Set clear button event listener
     const clearButton = document.getElementById("clear-grid");
     clearButton.addEventListener("click", clearGrid);
+}
 
-    // Set Slider
-    const slider = document.getElementById("size-slider");
-    slider.addEventListener("change", setSlider);
+window.addEventListener("load", (event) => {
+    fillGridContainer();
+    setActiveMenu();
 });
