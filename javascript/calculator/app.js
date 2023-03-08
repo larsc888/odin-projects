@@ -20,19 +20,16 @@ function calculate() {
             number = getCalculation(number, Number(itemList[i]), sign);
         }
     }
-    // Clear Calculator Store
-    CALCULATOR_STORE = "";
-    updateDisplay();
-
+    
     // Round Up Number
     number = Math.round(number * 100) / 100;
     if (number.toString().length > 12) {
         number = "Err: Num Too Big";
     }
 
-    // Set Calculation result  
-    let screen = document.querySelector("#screen");
-    screen.textContent = number;
+    // Clear Calculator Store
+    CALCULATOR_STORE = `${number}`;
+    updateDisplay();
 }
 
 function getCalculation(num1, num2, sign) {
@@ -110,7 +107,6 @@ function clearDisplay() {
         else {
             CALCULATOR_STORE = CALCULATOR_STORE.slice(0, lastIdx - 1);
         }
-        
         // Add a default 0 to display if CALCULATOR_STORE is now empty
         if (CALCULATOR_STORE.length === 0) {
             updateDisplay(0);
